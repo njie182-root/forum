@@ -4,10 +4,10 @@ import { getFirestore, collection, addDoc, getDocs, doc, getDoc } from "https://
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
 const firebaseConfig = {
-  apiKey: "API_KEY",
-  authDomain: "xxx.firebaseapp.com",
-  projectId: "xxx",
-  storageBucket: "xxx.appspot.com",
+  apiKey: "AIzaSyBLA-9CCY5qbj8z8eHU3_zsnvJhO-2ciOg",
+  authDomain: "forumgithub.firebaseapp.com",
+  projectId: "forumgithub",
+  storageBucket: "forumgithub.firebasestorage.app",
 };
 
 const app = initializeApp(firebaseConfig);
