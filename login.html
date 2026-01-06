@@ -1,11 +1,10 @@
-<h2>Buat Thread</h2>
-<input id="title" placeholder="Judul"><br>
-<textarea id="content" placeholder="Isi"></textarea><br>
-<input type="file" id="image"><br>
-<button onclick="createThread()">Publish</button>
+<h2>Login Forum</h2>
+<input id="user" placeholder="Username">
+<button onclick="login()">Masuk</button>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
-<script src="app.js"></script>
-
+<script>
+function login(){
+  localStorage.setItem("forumUser", document.getElementById("user").value);
+  location.href="index.html";
+}
+</script>
