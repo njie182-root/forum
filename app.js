@@ -1,4 +1,4 @@
-const API = "PASTE_URL_APPS_SCRIPT";
+const API = "https://script.google.com/macros/s/AKfycbxzINfTLqZ0rW5KmZDL8zDqiFQaOw8AihOmGy2qMw4UG0Rxj724WWpyM50I3OAsAXVF/exec";
 
 // 🔐 auth check
 const user = localStorage.getItem("forumUser");
@@ -48,7 +48,7 @@ async function loadThread(){
 
   loadComments(id);
   document.getElementById("commentLink").href =
-    "https://docs.google.com/forms/d/FORM_KOMENTAR_ID/viewform?entry.123="+id;
+    "https://docs.google.com/forms/d/e/1FAIpQLSdfM7C0-TyKoa7QCcb-5_oNOBcgOvXPbLnuw6w6ncVlRxyFBQ/viewform?entry.123="+id;
 }
 loadThread();
 
