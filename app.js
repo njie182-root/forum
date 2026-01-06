@@ -1,74 +1,66 @@
-// 🔹 Firebase config (GANTI DENGAN PUNYA KAMU)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+const API = "PASTE_URL_APPS_SCRIPT";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBLA-9CCY5qbj8z8eHU3_zsnvJhO-2ciOg",
-  authDomain: "forumgithub.firebaseapp.com",
-  projectId: "forumgithub",
-  storageBucket: "forumgithub.firebasestorage.app",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-// 🔹 Buat thread
-window.createThread = async function(){
-  const title = document.getElementById('title').value;
-  const content = document.getElementById('content').value;
-  const file = document.getElementById('image').files[0];
-
-  let imageURL = "";
-
-  if(file){
-    const imgRef = ref(storage, 'images/' + Date.now());
-    await uploadBytes(imgRef, file);
-    imageURL = await getDownloadURL(imgRef);
-  }
-
-  await addDoc(collection(db, "threads"), {
-    title, content, imageURL, date: Date.now()
-  });
-
-  location.href = "index.html";
+// 🔐 auth check
+const user = localStorage.getItem("forumUser");
+if(!user && location.pathname.indexOf("login") === -1){
+  location.href="login.html";
 }
 
-// 🔹 Tampilkan thread list
+// tampilkan user
+const authBox = document.getElementById("auth");
+if(authBox) authBox.innerHTML = "Login sebagai: " + user;
+
+// load threads
 async function loadThreads(){
+  const res = await fetch(API + "?type=threads");
+  const data = await res.json();
+
   const box = document.getElementById("threads");
   if(!box) return;
 
-  const snap = await getDocs(collection(db, "threads"));
-  snap.forEach(docu=>{
-    const d = docu.data();
+  data.reverse().forEach(t=>{
     box.innerHTML += `
       <div class="card">
-        <h3><a href="thread.html?id=${docu.id}">${d.title}</a></h3>
-        ${d.imageURL ? `<img src="${d.imageURL}" width="150">` : ""}
+        <h3><a href="thread.html?id=${t.id}">${t.title}</a></h3>
+        <small>oleh ${t.user}</small>
+        ${t.image ? `<img src="${t.image}" width="150">` : ""}
       </div>
     `;
   });
 }
 loadThreads();
 
-// 🔹 Tampilkan satu thread
+// single thread
 async function loadThread(){
-  const params = new URLSearchParams(location.search);
-  const id = params.get("id");
+  const p = new URLSearchParams(location.search);
+  const id = p.get("id");
   if(!id) return;
 
-  const refDoc = doc(db,"threads",id);
-  const snap = await getDoc(refDoc);
-  if(!snap.exists()) return;
+  const res = await fetch(API + "?type=threads");
+  const data = await res.json();
+  const t = data.find(x=>x.id==id);
 
-  const d = snap.data();
   document.getElementById("thread").innerHTML = `
-    <h2>${d.title}</h2>
-    <p>${d.content}</p>
-    ${d.imageURL ? `<img src="${d.imageURL}" width="300">` : ""}
+    <h2>${t.title}</h2>
+    <p>${t.content}</p>
+    ${t.image ? `<img src="${t.image}" width="300">` : ""}
   `;
+
+  loadComments(id);
+  document.getElementById("commentLink").href =
+    "https://docs.google.com/forms/d/FORM_KOMENTAR_ID/viewform?entry.123="+id;
 }
 loadThread();
 
+// comments
+async function loadComments(id){
+  const res = await fetch(API + "?type=comments&thread="+id);
+  const data = await res.json();
+  const box = document.getElementById("comments");
+
+  data.forEach(c=>{
+    box.innerHTML += `
+      <p><b>${c.user}</b>: ${c.text}</p>
+    `;
+  });
+}
