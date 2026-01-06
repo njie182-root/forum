@@ -1,1 +1,16 @@
+<div id="thread"></div>
+
+<div id="disqus_thread"></div>
+<script>
+var disqus_config = function () {
+  this.page.url = window.location.href;
+  this.page.identifier = location.search;
+};
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = 'https://NAMA-SITUS.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+</script>
 
